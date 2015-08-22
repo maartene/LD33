@@ -8,8 +8,9 @@ public class HeroAI : MonoBehaviour {
 	public float shootRange = 3.0f;
 	public float shootDamage = 2.0f;
 	public float attackDelay = 0.5f;
+	public float rotateSpeed = 360f;
 	
-	private float attackTimer = 0;
+	private float _attackTimer = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -19,15 +20,23 @@ public class HeroAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		attackTimer -= Time.deltaTime;
+		_attackTimer -= Time.deltaTime;
 
 		if (target != null) {
 			// shoot
 			Debug.Log ("Shoot! at target: "+target.name, target);
-			if (attackTimer <= 0) {
+			if (_attackTimer <= 0) {
 				Shoot();
-				attackTimer = attackDelay;
+				_attackTimer = attackDelay;
 			}
+
+			Vector3 direction = target.transform.position - transform.position;
+
+			Quaternion lookRotation = Quaternion.LookRotation(direction);
+			Debug.DrawLine(transform.position, transform.position + direction, Color.blue, 0.2f);
+			Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed * Time.deltaTime);
+			newRotation = Quaternion.Euler(0, newRotation.eulerAngles.y, 0);
+			transform.rotation = newRotation;
 
 
 		} else {

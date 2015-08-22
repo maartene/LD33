@@ -4,6 +4,7 @@ using System.Collections;
 public class Health : MonoBehaviour {
 
 	public float health = 10;
+	public GameObject gib;
 
 	// Use this for initialization
 	void Start () {
@@ -24,5 +25,8 @@ public class Health : MonoBehaviour {
 
 	private void Die() {
 		Destroy(gameObject);
+		if (gib != null) {
+			Instantiate(gib, transform.position, transform.rotation);
+		}
 	}
 }
